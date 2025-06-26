@@ -15,14 +15,14 @@ Already a pro? Just edit this README.md and make it your own. Want to make it ea
 
 ```
 cd existing_repo
-git remote add origin https://git.dcblox.com/mydcblox/middleware-library-common.git
+git remote add origin https://git.labs.com/openrangelabs/middleware-library-common.git
 git branch -M testing
 git push -uf origin testing
 ```
 
 ## Integrate with your tools
 
-- [ ] [Set up project integrations](https://git.dcblox.com/mydcblox/middleware-library-common/-/settings/integrations)
+- [ ] [Set up project integrations](https://git.labs.com/openrangelabs/middleware-library-common/-/settings/integrations)
 
 ## Collaborate with your team
 

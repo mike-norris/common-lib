@@ -1,6 +1,6 @@
-package com.mydcblox.middleware;
+package com.openrangelabs.middleware;
 
-public class DCBCommon {
+public class ORLCommon {
 
     public static final String LOGGING_EXCHANGE = "x.logging";
     public static final String LOGGING_DLX_EXCHANGE = "x.logging-dlx";
@@ -14,7 +14,7 @@ public class DCBCommon {
     public static final String PORTAL_USER_QUEUE = "q.portal-user";
     public static final String PORTAL_USER_DLQ_QUEUE = "q.portal-user-dlq";
 
-    public DCBCommon() {
+    public ORLCommon() {
     }
 
 }

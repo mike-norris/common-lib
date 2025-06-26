@@ -1,4 +1,4 @@
-package com.mydcblox.middleware.logging.model;
+package com.openrangelabs.middleware.logging.model;
 
 import jakarta.persistence.Entity;
 

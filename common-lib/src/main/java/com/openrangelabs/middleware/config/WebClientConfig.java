@@ -1,4 +1,4 @@
-package com.mydcblox.middleware.config;
+package com.openrangelabs.middleware.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +12,7 @@ import java.net.URL;
 @Configuration
 public class WebClientConfig {
 
-    @Value("${MyDCBloxDomain}")
+    @Value("${domain}")
     String domain;
 
     private static final String charset = "utf-8";

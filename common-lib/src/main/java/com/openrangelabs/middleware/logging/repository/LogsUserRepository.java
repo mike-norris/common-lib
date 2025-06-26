@@ -1,7 +1,7 @@
-package com.mydcblox.middleware.logging.repository;
+package com.openrangelabs.middleware.logging.repository;
 
-import com.mydcblox.middleware.logging.model.LogsUser;
-import com.mydcblox.middleware.logging.model.LogsUserId;
+import com.openrangelabs.middleware.logging.model.LogsUser;
+import com.openrangelabs.middleware.logging.model.LogsUserId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

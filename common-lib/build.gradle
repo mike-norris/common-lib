@@ -16,23 +16,12 @@ plugins {
     id 'idea'
 }
 
-group = 'com.mydcblox.middleware'
+group = 'com.openrangelabs.middleware'
 version = '2024.12.7'
 
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
-    maven {
-        url "https://git.dcblox.com/api/v4/groups/mydcblox/-/packages/maven"
-        name "DCB GitLab"
-        credentials(HttpHeaderCredentials) {
-            name = "Private-Token"
-            value = "glpat-eREcH9yZ9dnfebGsV__V" // the variable resides in $GRADLE_USER_HOME/gradle.properties
-        }
-        authentication {
-            header(HttpHeaderAuthentication)
-        }
-    }
 }
 
 ext {
@@ -92,18 +81,6 @@ publishing {
     publications {
         library(MavenPublication) {
             from components.java
-        }
-    }
-    repositories {
-        maven {
-            url "https://git.dcblox.com/api/v4/projects/65/packages/maven"
-            credentials(HttpHeaderCredentials) {
-                name = "Private-Token"
-                value = "glpat-eREcH9yZ9dnfebGsV__V" // the variable resides in $GRADLE_USER_HOME/gradle.properties
-            }
-            authentication {
-                header(HttpHeaderAuthentication)
-            }
         }
     }
 }
