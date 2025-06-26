@@ -35,7 +35,10 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter'
     implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    api 'com.fasterxml.jackson.core:jackson-databind'
+    api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     api 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
+    api 'org.springframework.boot:spring-boot-starter-validation'
 
     //Lombok
     annotationProcessor 'org.projectlombok:lombok'
@@ -44,6 +47,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'junit:junit:4.13.2'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     // api libs.commons.math3
