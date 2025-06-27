@@ -1,5 +1,8 @@
 package com.openrangelabs.middleware.logging.exception;
 
+import com.openrangelabs.middleware.exception.dto.ErrorResponseDTO;
+import com.openrangelabs.middleware.exception.dto.ValidationErrorResponseDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,7 @@ import java.util.stream.Collectors;
 
 /**
  * Global exception handler for validation errors
+ * Updated to use extracted DTO classes
  */
 @RestControllerAdvice
 public class ValidationExceptionHandler {
@@ -24,8 +28,8 @@ public class ValidationExceptionHandler {
      * Handle validation errors from request body validation
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ValidationErrorResponse> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
+    public ResponseEntity<ValidationErrorResponseDTO> handleValidationExceptions(
+            MethodArgumentNotValidException ex, HttpServletRequest request) {
 
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
@@ -34,11 +38,13 @@ public class ValidationExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
 
-        ValidationErrorResponse response = new ValidationErrorResponse(
-                "Validation failed",
-                errors,
-                LocalDateTime.now()
-        );
+        ValidationErrorResponseDTO response = ValidationErrorResponseDTO.builder()
+                .message("Validation failed")
+                .errors(errors)
+                .timestamp(LocalDateTime.now())
+                .path(request != null ? request.getRequestURI() : null)
+                .status(HttpStatus.BAD_REQUEST.value())
+                .build();
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -47,8 +53,8 @@ public class ValidationExceptionHandler {
      * Handle validation errors from method parameter validation
      */
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ValidationErrorResponse> handleConstraintViolationException(
-            ConstraintViolationException ex) {
+    public ResponseEntity<ValidationErrorResponseDTO> handleConstraintViolationException(
+            ConstraintViolationException ex, HttpServletRequest request) {
 
         Map<String, String> errors = ex.getConstraintViolations()
                 .stream()
@@ -57,11 +63,13 @@ public class ValidationExceptionHandler {
                         ConstraintViolation::getMessage
                 ));
 
-        ValidationErrorResponse response = new ValidationErrorResponse(
-                "Constraint validation failed",
-                errors,
-                LocalDateTime.now()
-        );
+        ValidationErrorResponseDTO response = ValidationErrorResponseDTO.builder()
+                .message("Constraint validation failed")
+                .errors(errors)
+                .timestamp(LocalDateTime.now())
+                .path(request != null ? request.getRequestURI() : null)
+                .status(HttpStatus.BAD_REQUEST.value())
+                .build();
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -70,64 +78,53 @@ public class ValidationExceptionHandler {
      * Handle IllegalArgumentException (e.g., from enum validation)
      */
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(
-            IllegalArgumentException ex) {
+    public ResponseEntity<ErrorResponseDTO> handleIllegalArgumentException(
+            IllegalArgumentException ex, HttpServletRequest request) {
 
-        ErrorResponse response = new ErrorResponse(
-                ex.getMessage(),
-                LocalDateTime.now()
-        );
+        ErrorResponseDTO response = ErrorResponseDTO.builder()
+                .message(ex.getMessage())
+                .timestamp(LocalDateTime.now())
+                .path(request != null ? request.getRequestURI() : null)
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error("Bad Request")
+                .build();
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     /**
-     * Validation error response structure
+     * Handle general RuntimeException
      */
-    public static class ValidationErrorResponse {
-        private String message;
-        private Map<String, String> errors;
-        private LocalDateTime timestamp;
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponseDTO> handleRuntimeException(
+            RuntimeException ex, HttpServletRequest request) {
 
-        public ValidationErrorResponse(String message, Map<String, String> errors, LocalDateTime timestamp) {
-            this.message = message;
-            this.errors = errors;
-            this.timestamp = timestamp;
-        }
+        ErrorResponseDTO response = ErrorResponseDTO.builder()
+                .message("An internal error occurred")
+                .timestamp(LocalDateTime.now())
+                .path(request != null ? request.getRequestURI() : null)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .error("Internal Server Error")
+                .build();
 
-        // Getters
-        public String getMessage() {
-            return message;
-        }
-
-        public Map<String, String> getErrors() {
-            return errors;
-        }
-
-        public LocalDateTime getTimestamp() {
-            return timestamp;
-        }
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     /**
-     * Simple error response structure
+     * Handle general Exception (catch-all)
      */
-    public static class ErrorResponse {
-        private String message;
-        private LocalDateTime timestamp;
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDTO> handleGeneralException(
+            Exception ex, HttpServletRequest request) {
 
-        public ErrorResponse(String message, LocalDateTime timestamp) {
-            this.message = message;
-            this.timestamp = timestamp;
-        }
+        ErrorResponseDTO response = ErrorResponseDTO.builder()
+                .message("An unexpected error occurred")
+                .timestamp(LocalDateTime.now())
+                .path(request != null ? request.getRequestURI() : null)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .error("Internal Server Error")
+                .build();
 
-        // Getters
-        public String getMessage() {
-            return message;
-        }
-
-        public LocalDateTime getTimestamp() {
-            return timestamp;
-        }
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
