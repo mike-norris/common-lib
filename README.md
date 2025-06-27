@@ -1,93 +1,126 @@
-# middleware-library-common
+# OpenRange Labs Middleware Common Library
 
+A comprehensive Spring Boot 3.4+ library providing standardized logging, messaging, validation, and HTTP client functionality for enterprise Java applications.
 
+[![Java Version](https://img.shields.io/badge/Java-17+-blue.svg)](https://openjdk.java.net/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.4+-green.svg)](https://spring.io/projects/spring-boot)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## Getting started
+## 🚀 Quick Start
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://git.labs.com/openrangelabs/middleware-library-common.git
-git branch -M testing
-git push -uf origin testing
+### Maven
+```xml
+<dependency>
+    <groupId>com.openrangelabs.middleware</groupId>
+    <artifactId>common-lib</artifactId>
+    <version>2024.12.7</version>
+</dependency>
 ```
 
-## Integrate with your tools
+### Gradle
+```gradle
+implementation 'com.openrangelabs.middleware:common-lib:2024.12.7'
+```
 
-- [ ] [Set up project integrations](https://git.labs.com/openrangelabs/middleware-library-common/-/settings/integrations)
+## 📚 Documentation
 
-## Collaborate with your team
+Complete documentation is available on our **[GitHub Pages](https://openrangelabs.github.io/middleware-library-common/)**
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+### Quick Links
+- **[Getting Started Guide](docs/getting-started.md)** - Setup and basic usage
+- **[Logging Guide](docs/logging.md)** - User and system logging
+- **[Messaging Guide](docs/messaging.md)** - RabbitMQ integration
+- **[WebClient Guide](docs/webclient.md)** - Enhanced HTTP client
+- **[API Reference](docs/api-reference.md)** - Complete API documentation
+- **[Configuration](docs/configuration.md)** - Application properties
+- **[Examples](docs/examples/)** - Code examples and use cases
 
-## Test and Deploy
+## ✨ Key Features
 
-Use the built-in continuous integration in GitLab.
+- **🔍 Structured Logging** - User activity and system logs with JPA repositories
+- **📨 Messaging Integration** - RabbitMQ queues and exchanges with dead letter queues
+- **🌐 Enhanced WebClient** - Configured HTTP client with connection pooling and retry logic
+- **✅ Validation Framework** - Custom validators for common data types
+- **🛡️ Error Handling** - Standardized error responses and exception handling
+- **🏗️ Builder Patterns** - Fluent APIs for creating DTOs and entities
+- **🔧 Type Safety** - Comprehensive enums for HTTP methods, status codes, log levels
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+## 🎯 Use Cases
 
-***
+- **Microservices Architecture** - Standardized logging and messaging across services
+- **API Gateway Integration** - Enhanced HTTP clients with proper error handling
+- **Enterprise Applications** - Comprehensive audit trails and user activity tracking
+- **Event-Driven Systems** - RabbitMQ messaging with reliable delivery patterns
 
-# Editing this README
+## 📖 Quick Example
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+```java
+@Service
+public class UserService {
+    
+    @Autowired
+    private LogsUserService logsUserService;
+    
+    @Autowired
+    private WebClient.Builder webClientBuilder;
+    
+    public void createUser(String username, String email) {
+        // Log user creation
+        LogsUserDTO userLog = LogsUserDTO.builder()
+            .userId(12345)
+            .organizationId(100)
+            .type(UserLogType.CREATE.getCode())
+            .description("User account created")
+            .build();
+        
+        logsUserService.saveLog(userLog);
+        
+        // Make external API call
+        WebClient client = webClientBuilder
+            .baseUrl("https://api.external-service.com")
+            .build();
+            
+        client.post()
+            .uri("/users")
+            .bodyValue(Map.of("username", username, "email", email))
+            .retrieve()
+            .bodyToMono(String.class)
+            .subscribe();
+    }
+}
+```
 
-## Suggestions for a good README
+## 🏗️ Architecture
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+The library is organized into several key modules:
 
-## Name
-Choose a self-explaining name for your project.
+- **Logging** (`com.openrangelabs.middleware.logging`) - User and system logging with JPA entities
+- **Messaging** (`com.openrangelabs.middleware.messaging`) - RabbitMQ configuration and DTOs
+- **Web** (`com.openrangelabs.middleware.web`) - HTTP enums and WebClient configuration
+- **Validation** (`com.openrangelabs.middleware.validation`) - Custom validation annotations
+- **User Management** (`com.openrangelabs.middleware.user`) - Portal user entities and services
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+## 🛠️ Requirements
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+- **Java 17+**
+- **Spring Boot 3.4+**
+- **PostgreSQL** (for JPA entities)
+- **RabbitMQ** (optional, for messaging features)
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+## 🤝 Contributing
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## 📄 License
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+## 🆘 Support
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+- **Documentation**: [GitHub Pages](https://openrangelabs.github.io/middleware-library-common/)
+- **Issues**: [GitHub Issues](https://github.com/openrangelabs/middleware-library-common/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/openrangelabs/middleware-library-common/discussions)
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+---
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+**OpenRange Labs** - Building enterprise-grade middleware solutions
