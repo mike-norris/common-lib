@@ -1,5 +1,6 @@
 package com.openrangelabs.middleware.logging.model;
 
+import com.openrangelabs.middleware.validation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
@@ -33,8 +34,7 @@ public class LogsSystem {
 
     @Column(name = "log_level", nullable = false, length = 20)
     @NotNull(message = "Log level is required")
-    @Pattern(regexp = "^(TRACE|DEBUG|INFO|WARN|ERROR|FATAL)$",
-            message = "Log level must be one of: TRACE, DEBUG, INFO, WARN, ERROR, FATAL")
+    @ValidLogLevel
     private String logLevel;
 
     @Column(name = "logger_name", length = 255)
@@ -72,8 +72,7 @@ public class LogsSystem {
     private String requestUri;
 
     @Column(name = "request_method", length = 10)
-    @Pattern(regexp = "^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|TRACE|CONNECT)$",
-            message = "Request method must be a valid HTTP method")
+    @ValidHttpMethod
     private String requestMethod;
 
     @Column(name = "response_status")
@@ -87,6 +86,7 @@ public class LogsSystem {
 
     @Column(name = "environment", length = 50)
     @Size(max = 50, message = "Environment cannot exceed 50 characters")
+    @ValidEnvironment
     private String environment;
 
     @Column(name = "version", length = 50)

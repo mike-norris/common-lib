@@ -1,6 +1,7 @@
 package com.openrangelabs.middleware.logging.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.openrangelabs.middleware.validation.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDateTime;
 
@@ -24,8 +25,7 @@ public class LogsSystemDTO {
     private String hostName;
 
     @NotNull(message = "Log level is required")
-    @Pattern(regexp = "^(TRACE|DEBUG|INFO|WARN|ERROR|FATAL)$",
-            message = "Log level must be one of: TRACE, DEBUG, INFO, WARN, ERROR, FATAL")
+    @ValidLogLevel
     private String logLevel;
 
     @Size(max = 255, message = "Logger name cannot exceed 255 characters")
@@ -52,9 +52,7 @@ public class LogsSystemDTO {
     @Size(max = 500, message = "Request URI cannot exceed 500 characters")
     private String requestUri;
 
-    @Pattern(regexp = "^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|TRACE|CONNECT)$",
-            message = "Request method must be a valid HTTP method",
-            flags = Pattern.Flag.CASE_INSENSITIVE)
+    @ValidHttpMethod
     private String requestMethod;
 
     @Min(value = 100, message = "Response status must be a valid HTTP status code")
@@ -65,6 +63,7 @@ public class LogsSystemDTO {
     private Long executionTimeMs;
 
     @Size(max = 50, message = "Environment cannot exceed 50 characters")
+    @ValidEnvironment
     private String environment;
 
     @Size(max = 50, message = "Version cannot exceed 50 characters")
