@@ -29,27 +29,53 @@ ext {
 }
 
 dependencies {
+    // Spring Boot Web (already in your file)
     api 'org.springframework.boot:spring-boot-starter-web'
     api 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // Spring Cloud (already in your file)
     implementation 'org.springframework.cloud:spring-cloud-starter-config'
     implementation 'org.springframework.cloud:spring-cloud-starter'
     implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    api 'com.fasterxml.jackson.core:jackson-databind'
-    api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-    api 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
-    api 'org.springframework.boot:spring-boot-starter-validation'
 
-    //Lombok
+    // JPA (already in your file)
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // HTTP Client (already in your file)
+    api 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
+
+    // Lombok (already in your file)
     annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
 
+    // === NEW REQUIRED DEPENDENCIES ===
+
+    // Validation - REQUIRED for all the validation annotations
+    api 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Jackson - REQUIRED for JSON serialization with DTOs
+    api 'com.fasterxml.jackson.core:jackson-databind'
+    api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+    // === OPTIONAL DEPENDENCIES ===
+
+    // RabbitMQ - ONLY if you want to use messaging features
+    // Uncomment this line if you need RabbitMQ support:
+    api 'org.springframework.boot:spring-boot-starter-amqp'
+
+    // === TEST DEPENDENCIES ===
+
+    // Spring Boot Test (already in your file)
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // JUnit (keep both for compatibility)
     testImplementation 'junit:junit:4.13.2'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    testImplementation 'org.mockito:mockito-junit-jupiter'
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Mockito for JUnit 5 - REQUIRED for new tests
+    testImplementation 'org.mockito:mockito-junit-jupiter'
 
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     // api libs.commons.math3

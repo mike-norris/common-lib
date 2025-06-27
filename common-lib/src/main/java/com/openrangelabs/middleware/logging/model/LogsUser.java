@@ -1,5 +1,6 @@
 package com.openrangelabs.middleware.logging.model;
 
+import com.openrangelabs.middleware.validation.ValidUserLogType;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
@@ -23,8 +24,7 @@ public class LogsUser {
     private String description;
 
     @Column(name = "type", length = 50)
-    @Pattern(regexp = "^(LOGIN|LOGOUT|CREATE|UPDATE|DELETE|VIEW|DOWNLOAD|UPLOAD|ERROR|AUDIT)$",
-            message = "Type must be one of: LOGIN, LOGOUT, CREATE, UPDATE, DELETE, VIEW, DOWNLOAD, UPLOAD, ERROR, AUDIT")
+    @ValidUserLogType
     private String type;
 
     // Default constructor
