@@ -48,7 +48,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     compileOnly 'org.projectlombok:lombok'
 
-    // === NEW REQUIRED DEPENDENCIES ===
+    // === REQUIRED DEPENDENCIES ===
 
     // Validation - REQUIRED for all the validation annotations
     api 'org.springframework.boot:spring-boot-starter-validation'
@@ -56,6 +56,18 @@ dependencies {
     // Jackson - REQUIRED for JSON serialization with DTOs
     api 'com.fasterxml.jackson.core:jackson-databind'
     api 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+    // === WEBCLIENT DEPENDENCIES ===
+
+    // Reactor Netty - REQUIRED for enhanced WebClient configuration
+    api 'io.projectreactor.netty:reactor-netty-http'
+
+    // Netty dependencies are usually included with spring-boot-starter-webflux
+    // but explicitly declaring for enhanced WebClient features
+    implementation 'io.netty:netty-handler'
+    implementation 'io.netty:netty-codec-http'
+    implementation 'io.netty:netty-transport-native-epoll'
+    implementation 'io.netty:netty-resolver-dns'
 
     // === OPTIONAL DEPENDENCIES ===
 
@@ -76,6 +88,10 @@ dependencies {
 
     // Mockito for JUnit 5 - REQUIRED for new tests
     testImplementation 'org.mockito:mockito-junit-jupiter'
+
+    // WebClient testing support
+    testImplementation 'com.squareup.okhttp3:mockwebserver:5.0.0-alpha.16'
+    testImplementation 'org.springframework:spring-webflux' // For WebTestClient if needed
 
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     // api libs.commons.math3
